@@ -3,8 +3,8 @@
 
 use clap::Parser;
 use color_eyre::eyre::Context;
-use std::path::PathBuf;
 use std::fs;
+use std::path::PathBuf;
 
 #[derive(Parser)]
 #[command(version, about)]
