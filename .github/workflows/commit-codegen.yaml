@@ -10,7 +10,6 @@ on:
 jobs:
   commit:
     name: Commit and push generated code
-    needs: [ python_build, rust_build ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
