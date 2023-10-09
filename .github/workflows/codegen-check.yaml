@@ -1,7 +1,7 @@
 # Copyright 2023 SECO Mind Srl
 # SPDX-License-Identifier: Apache-2.0
 
-name: rust-codegen
+name: codegen-check
 
 permissions:
   contents: read
@@ -15,7 +15,7 @@ env:
   PB_VERSION: 24.3
 
 jobs:
-  rust-build:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,10 +26,7 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Install rust toolchain
         uses: dtolnay/rust-toolchain@stable
-      - name: Generate Rust code
-        run: cargo r --manifest-path rust/Cargo.toml -p rust-codegen -- -w proto/ -o out/
-      - name: Upload generated code
-        uses: actions/upload-artifact@v3
-        with:
-          name: rust-proto
-          path: out/
+      - name: Generate code
+        run: make
+      - name: Check diff in generated code
+        run: ./scripts/check-diff.sh
