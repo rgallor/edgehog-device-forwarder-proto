@@ -27,3 +27,12 @@ jobs:
             rust/edgehog-device-forwarder-proto/src/proto.rs
       - name: Commit the generated code
         run: .github/workflows/scripts/commit.sh
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: Update generated code
+          base: master
+          labels: automated-pr
+          branch: update-code-gen
+          delete-branch: true
+          signoff: true
