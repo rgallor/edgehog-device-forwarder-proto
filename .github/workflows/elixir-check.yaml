@@ -1,0 +1,36 @@
+# Copyright 2023 SECO Mind Srl
+# SPDX-License-Identifier: Apache-2.0
+
+permissions:
+  contents: read
+on:
+  workflow_call:
+
+defaults:
+  run:
+    working-directory: elixir/edgehog_device_forwarder_proto
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '26'
+          elixir-version: '1.15.7'
+      - name: Fetch dependencies
+        run: mix do deps.get --only test, deps.compile
+      - name: Check formatting
+        run: mix format --check-formatted
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '26'
+          elixir-version: '1.15.7'
+      - name: Fetch dependencies
+        run: mix do deps.get --only test, deps.compile
+      - name: Run tests
+        run:  mix test

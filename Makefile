@@ -27,27 +27,36 @@ CANONICAL_CURDIR = $(realpath $(CURDIR))
 
 PROTO_DIR = $(CANONICAL_CURDIR)/proto
 RUST_LANG_DIR = $(CANONICAL_CURDIR)/rust
+ELIXIR_LANG_DIR = $(CANONICAL_CURDIR)/elixir
+ELIXIR_LANG_LIB=$(ELIXIR_LANG_DIR)/edgehog_device_forwarder_proto/lib/edgehog_device_forwarder_proto
 
 BASE_DIR := $(CANONICAL_O)
 $(if $(BASE_DIR),, $(error output directory "$(O)" does not exist))
 
 BUILD_DIR := $(BASE_DIR)/build
 RUST_BUILD_DIR := $(BUILD_DIR)/rust
+ELIXIR_BUILD_DIR := $(BUILD_DIR)/elixir
 
-FILES=$(wildcard proto/edgehog/device/forwarder/*.proto)
+FILES=$(wildcard $(PROTO_DIR)/edgehog/device/forwarder/*.proto)
 
 PROTOC_CHECK_SCRIPT=$(CANONICAL_CURDIR)/scripts/protoc_check.sh
+ELIXIR_DEPS_CHECK_SCRIPT=$(CANONICAL_CURDIR)/scripts/elixir_deps_check.sh
 
 RUST_LANG=$(RUST_BUILD_DIR)/proto.rs
 RUST_FILES=$(shell find "$(RUST_LANG_DIR)/rust-codegen" -type f -regex '.*(rs|Cargo.toml|Cargo.lock)$$') \
 	$(RUST_LANG_DIR)/Cargo.toml $(RUST_LANG_DIR)/Cargo.lock
 
+ELIXIR_LANG=$(ELIXIR_BUILD_DIR)/edgehog/device/forwarder/http.pb.ex \
+	$(ELIXIR_BUILD_DIR)/edgehog/device/forwarder/ws.pb.ex \
+	$(ELIXIR_BUILD_DIR)/edgehog/device/forwarder/message.pb.ex
+ELIXIR_FILES="$(ELIXIR_LANG_LIB)/edgehog/device/forwarder/"{http,ws,message}.pb.ex
+
 # This is our default rule, so must come first
 .PHONY: all
-all: rust
+all: rust elixir
 
 .PHONY: install
-install: rust-install
+install: rust-install elixir-install
 
 .PHONY: clean
 clean:
@@ -70,6 +79,30 @@ rust-install: rust
 .PHONY: rust-dirclean
 rust-dirclean:
 	rm -rf $(RUST_BUILD_DIR)
+
+$(ELIXIR_LANG) &: $(FILES)
+	mkdir -p $(ELIXIR_BUILD_DIR)
+	protoc \
+	  --elixir_out=$(ELIXIR_BUILD_DIR) \
+	  --elixir_opt=package_prefix=EdgehogDeviceForwarderProto \
+	  --proto_path=$(PROTO_DIR) \
+	  $(FILES)
+	mix format $(ELIXIR_LANG)
+
+elixir-dependencies-check: $(ELIXIR_DEPS_CHECK_SCRIPT)
+	$(SHELL) $(ELIXIR_DEPS_CHECK_SCRIPT)
+
+.PHONY: elixir
+elixir: protoc-check elixir-dependencies-check $(ELIXIR_LANG)
+
+.PHONY: elixir-install
+elixir-install: elixir
+	mkdir -p "$(ELIXIR_LANG_LIB)/edgehog/device/forwarder/"
+	install -m 644 $(ELIXIR_LANG) "$(ELIXIR_LANG_LIB)/edgehog/device/forwarder/"
+
+.PHONY: elixir-dirclean
+elixir-dirclean:
+	rm -rf $(ELIXIR_BUILD_DIR)
 
 .PHONY: help
 help:

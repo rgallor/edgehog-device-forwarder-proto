@@ -26,6 +26,14 @@ jobs:
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - name: Install rust toolchain
         uses: dtolnay/rust-toolchain@stable
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: '26'
+          elixir-version: '1.15.7'
+      - name: Install elixir protobuf compiler
+        run: |
+          mix escript.install hex protobuf --force
+          echo "$HOME/.mix/escripts" >> "$GITHUB_PATH"
       - name: Generate code
         run: make install --always-make
       - name: Check diff in generated code
