@@ -1,0 +1,32 @@
+# Copyright 2023 SECO Mind Srl
+# SPDX-License-Identifier: Apache-2.0
+
+name: codegen-check
+
+permissions:
+  contents: read
+
+on:
+  workflow_call:
+
+env:
+  CARGO_TERM_COLOR: always
+  PB_REL: https://github.com/protocolbuffers/protobuf/releases
+  PB_VERSION: 24.4
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install protoc
+        run: |
+          curl -LO "$PB_REL/download/v$PB_VERSION/protoc-$PB_VERSION-linux-x86_64.zip"
+          unzip "protoc-$PB_VERSION-linux-x86_64.zip" -d "$HOME/.local"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - name: Install rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Generate code
+        run: make all
+      - name: Check diff in generated code
+        run: ./scripts/check_diff.sh

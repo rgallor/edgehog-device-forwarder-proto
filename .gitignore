@@ -1,5 +1,14 @@
 # Copyright 2023 SECO Mind Srl
 # SPDX-License-Identifier: Apache-2.0
 
+# Pre commit configuration file
 .pre-commit-config.yaml
+
+# IntelliJ
 .idea/
+
+# Rust dist directory
+target/
+
+# Codegen output directory
+output/
