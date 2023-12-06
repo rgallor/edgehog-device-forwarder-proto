@@ -5,3 +5,7 @@ Source: https://github.com/edgehog-device-manager/edgehog-device-forwarder-proto
 Files: out/* rust/Cargo.lock rust/edgehog-device-forwarder-proto/src/proto.rs
 Copyright: 2023 SECO Mind Srl
 License: Apache-2.0
+
+Files: elixir/edgehog_device_forwarder_proto/lib/edgehog_device_forwarder_proto/**/*.ex
+Copyright: 2023 SECO Mind Srl
+License: Apache-2.0

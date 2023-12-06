@@ -24,3 +24,6 @@ jobs:
   rust-check:
     needs: [codegen-check]
     uses: ./.github/workflows/rust-check.yaml
+  elixir-check:
+    needs: [codegen-check]
+    uses: ./.github/workflows/elixir-check.yaml
