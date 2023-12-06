@@ -4,3 +4,6 @@
 mod proto;
 
 pub use proto::*;
+
+// re-exporting dependencies
+pub use prost;
