@@ -27,6 +27,6 @@ jobs:
       - name: Install rust toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: Generate code
-        run: make all
+        run: make install --always-make
       - name: Check diff in generated code
         run: ./scripts/check_diff.sh
