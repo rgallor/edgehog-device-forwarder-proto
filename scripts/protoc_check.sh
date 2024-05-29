@@ -5,7 +5,7 @@
 
 set -eEuo pipefail
 
-PROTOC_VERSION='24.4'
+PROTOC_VERSION='26.1'
 # check only major version of protoc
 version=$(protoc --version | cut -d ' ' -f 2)
 

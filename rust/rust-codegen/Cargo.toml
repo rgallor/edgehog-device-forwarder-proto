@@ -6,8 +6,9 @@ name = "rust-codegen"
 version = "0.1.0"
 edition = { workspace = true }
 license = { workspace = true }
-rust-version = { workspace = true }
 publish = false
+rust-version = { workspace = true }
+description = "Edgehog device runtime forwarder protocol code generator for Rust"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
