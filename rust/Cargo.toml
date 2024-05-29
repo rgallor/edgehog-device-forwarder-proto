@@ -31,5 +31,5 @@ rust-version = "1.72.0"
 [workspace.dependencies]
 clap = "4.4.6"
 color-eyre = "0.6.2"
-prost = "0.12.1"
-prost-build = "0.12.1"
+prost = "0.12.0"
+prost-build = "0.12.0"
